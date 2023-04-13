@@ -1,20 +1,36 @@
 #!/bin/bash
 
-availabilityZone="us-east-1a"
-name="Firsh_Instance"
+name=$(echo -e "$1" |  /usr/bin/jq '.name' | tr -d '"')
+if [[ !"$name" ]]; then
+    name="New_Instance"
+fi
+
+availabilityZone=$(echo -e "$1" |  /usr/bin/jq '.zone' | tr -d '"')
+if [[ !"$availabilityZone" ]]; then
+    availabilityZone="us-east-1a"
+fi
+
+vpcId=$(echo -e "$1" |  /usr/bin/jq '.vpc' | tr -d '"')
+ids=""
 vpcCidrBlock="10.0.0.0/16"
+if [[ !"$vpcId" ]]; then
+    source "$SCRIPT_DIR/createVpc.sh"
+    createVpc $name $vpcCidrBlock
+    echo "VPC created"
+    ids="$vpcId"
+else
+    source ./existServices/vpc.sh
+    checkVpc "$vpcId"
+fi
+
+
 subNetCidrBlock="10.0.1.0/24"
 port22CidrBlock="0.0.0.0/0"
 destinationCidrBlock="0.0.0.0/0"
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)/createServices"
 
 message="ok"
-ids=""
 
-source "$SCRIPT_DIR/createVpc.sh"
-createVpc $name $vpcCidrBlock
-echo "VPC created"
-ids="$vpcId"
 
 if [ "${vpcId}" != 0 ]; then
     #create Internet Gateway
