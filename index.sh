@@ -1,5 +1,7 @@
 #!/bin/bash
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)/utils"
+
 name=$(echo -e "$1" |  /usr/bin/jq '.name' | tr -d '"')
 if [[ !"$name" ]]; then
     name="New_Instance"
@@ -20,28 +22,33 @@ if [[ !"$vpcId" ]]; then
     ids="$vpcId"
 else
     source ./existServices/vpc.sh
-    checkVpc "$vpcId"
+    checkVpc "$vpcId" "$name" "$vpcCidrBlock"
 fi
 
 
 subNetCidrBlock="10.0.1.0/24"
 port22CidrBlock="0.0.0.0/0"
 destinationCidrBlock="0.0.0.0/0"
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)/createServices"
 
 message="ok"
 
 
 if [ "${vpcId}" != 0 ]; then
-    #create Internet Gateway
-    source "$SCRIPT_DIR/createGatewayAndAttachVpc.sh"
-    createGatewayAndAttachVpc "$name" "$vpcId"
-    echo "Internet Gateway created"
+    #check Internet Gateway
+    source "$SCRIPT_DIR/existServices/internetGw.sh"
+    checkIGW "$vpcId"
+    if [[ !$gatewayId ]];
+    then
+        #create Internet Gateway
+        source "$SCRIPT_DIR/createGatewayAndAttachVpc.sh"
+        createGatewayAndAttachVpc "$name" "$vpcId"
+        echo "Internet Gateway created"
+    fi
     ids="$gatewayId $ids"
     #create Subnet
     source "$SCRIPT_DIR/createSubnet.sh"
     createSubnet "$name" "$subNetCidrBlock" "$availabilityZone" "$vpcId"
-    echo "Subnet created"
+    echo "Subnet created" #
     ids="$subnetId $ids"
     #create security group
     source "$SCRIPT_DIR/createSecurityGroup.sh"
