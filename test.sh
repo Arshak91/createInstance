@@ -1,11 +1,8 @@
-#!bin/bash
 
 
-IGW_INFO=$(aws ec2 describe-internet-gateways \
-  --internet-gateway-ids "igw-077863aefc4708989" \
-  --output json)
-
-vpc=$( aws ec2 describe-vpcs --vpc-ids "vpc-03d757463d0b56b9f" 2>&1)
-
-echo "Internet Gateway Info: $IGW_INFO"
-echo "VPC Info: $vpc"
+# regexp=^([0-9]{1,3}\.){3}[0-9]{1,3}$
+ipAddress=$1
+if [[ $ipAddress =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]];
+then
+  echo $ipAddress
+fi
