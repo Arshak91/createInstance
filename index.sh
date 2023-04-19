@@ -72,7 +72,7 @@ else
 fi
 
 s3_instance=$(aws ec2 run-instances --tag-specifications \
-    'ResourceType=instance,Tags=[{Key=Name,Value='$name'}]' \
+    'ResourceType=instance,Tags=[{Key=Name,Value='$name'},{Key=tbd,Value="true"}]' \
     --image-id ami-007855ac798b5175e \
     --count 1 \
     --instance-type t2.micro \

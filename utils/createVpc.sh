@@ -15,7 +15,8 @@ function createVpc() {
     #name the vpc
     aws ec2 create-tags \
     --resources "$vpcId" \
-    --tags Key=Name,Value="$vpc_name"
+    --tags Key=Name,Value="$vpc_name" \
+    --tags Key=tbd,Value="true"
 
     #add dns support
     modify_response=$(aws ec2 modify-vpc-attribute \

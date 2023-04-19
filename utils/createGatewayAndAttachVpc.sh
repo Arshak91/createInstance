@@ -12,7 +12,9 @@ function createGatewayAndAttachVpc() {
     #add name the internet gateway
     $(aws ec2 create-tags \
     --resources "$gatewayId" \
-    --tags Key=Name,Value="$igw_name")
+    --tags Key=Name,Value="$igw_name" \
+    --tags Key=tbd,Value="true"
+    )
 
     #attach gateway to vpc
     attach_response=$(aws ec2 attach-internet-gateway \
