@@ -18,7 +18,8 @@ function createSubnet() {
     #name the subnet
     aws ec2 create-tags \
     --resources "$subnetId" \
-    --tags Key=Name,Value="$sub_name"
+    --tags Key=Name,Value="$sub_name" \
+    --tags Key=tbd,Value="true"
 
     #enable public ip on subnet
     modify_response=$(aws ec2 modify-subnet-attribute \

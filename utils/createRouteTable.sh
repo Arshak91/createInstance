@@ -20,6 +20,11 @@ function createRouteTable() {
     --resources "$routeTableId" \
     --tags Key=Name,Value="$routeTableName"
 
+    #add tbd tag
+    aws ec2 create-tags \
+    --resources "$routeTableId" \
+    --tags Key=tbd,Value="true"
+
     #add route for the internet gateway
     route_response=$(aws ec2 create-route \
     --route-table-id "$routeTableId" \

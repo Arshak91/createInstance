@@ -16,7 +16,8 @@ function createSecurityGroup() {
     #name the security group
     aws ec2 create-tags \
     --resources "$groupId" \
-    --tags Key=Name,Value="$scg_name"
+    --tags Key=Name,Value="$scg_name" \
+    --tags Key=tbd,Value="true"
     #enable port 22
 
     security_response2=$(aws ec2 authorize-security-group-ingress \
