@@ -6,11 +6,17 @@
 
 
 
-str=100
-if [[ $str==100 ]];then
-    return
+ports="80 22 443 444"
+if [[ $ports =~ ^([0-9]{2,5}|([0-9]{2,5}(\ [0-9]{2,5}){1,}))$ ]];
+then
+    echo "Hello"
 else
-    echo "some"
+    echo "false"
 fi
 
-echo "hello 1111"
+for i in $ports; do
+    if [[ $i =~ ^([0-9]{2,5})$ ]];
+    then
+        echo $i
+    fi
+done
