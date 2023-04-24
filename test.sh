@@ -14,6 +14,7 @@ else
     echo "false"
 fi
 
+
 for i in $ports; do
     if [[ $i =~ ^([0-9]{2,5})$ ]];
     then
